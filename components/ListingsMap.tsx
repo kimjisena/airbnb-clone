@@ -1,16 +1,79 @@
-import { View, Text } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import React from "react";
-import MapView from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { defaultStyles } from "@/constants/Styles";
+import { ListingGeo } from "@/interfaces/listingGeo";
+import { useRouter } from "expo-router";
 
 interface ListingsMapProps {
   listings: any;
 }
+
+const INITIAL_REGION = {
+  latitude: 37.78825,
+  longitude: -122.4324,
+  latitudeDelta: 9,
+  longitudeDelta: 9,
+};
 const ListingsMap = ({ listings }: ListingsMapProps) => {
+  const router = useRouter();
+  const onMarkerSelected = (item: ListingGeo) => {
+    router.push(`/listing/${item.properties.id}`);
+  };
+
   return (
-    <View>
-      <Text>ListingsMap</Text>
+    <View style={defaultStyles.container}>
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={StyleSheet.absoluteFill}
+        showsUserLocation
+        showsMyLocationButton
+        initialRegion={INITIAL_REGION}
+      >
+        {listings.features.map((item: ListingGeo) => {
+          return (
+            <Marker
+              onPress={() => onMarkerSelected(item)}
+              key={item.properties.id}
+              coordinate={{
+                latitude: item.geometry.coordinates[1],
+                longitude: item.geometry.coordinates[0],
+              }}
+            >
+              <View style={styles.marker}>
+                <Text style={styles.markerText}>$ {item.properties.price}</Text>
+              </View>
+            </Marker>
+          );
+        })}
+      </MapView>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  marker: {
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+    padding: 6,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    shadowOffset: {
+      width: 1,
+      height: 10,
+    },
+  },
+  markerText: {
+    fontSize: 14,
+    fontFamily: 'mon-sb',
+  },
+});
 
 export default ListingsMap;
