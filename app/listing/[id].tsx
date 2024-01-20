@@ -10,7 +10,13 @@ import React from "react";
 import { useLocalSearchParams } from "expo-router";
 import listingsData from "@/assets/data/airbnb-listings.json";
 import { Listing } from "@/interfaces/listing";
-import Animated, { SlideInDown } from "react-native-reanimated";
+import Animated, {
+  SlideInDown,
+  interpolate,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useScrollViewOffset,
+} from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
@@ -20,12 +26,38 @@ const { width } = Dimensions.get("window");
 const Page = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
   const listing = (listingsData as Listing[]).find((item) => item.id === id);
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  const scrollOffset = useScrollViewOffset(scrollRef);
+  const imageAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            scrollOffset.value,
+            [-IMG_HEIGHT, 0, IMG_HEIGHT],
+            [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75],
+          ),
+        },
+        {
+          scale: interpolate(
+            scrollOffset.value,
+            [-IMG_HEIGHT, 0, IMG_HEIGHT],
+            [2, 1, 1],
+          ),
+        },
+      ],
+    };
+  });
   return (
     <View style={styles.container}>
-      <Animated.ScrollView>
+      <Animated.ScrollView
+        ref={scrollRef}
+        contentConainterStyle={{ paddingBottom: 100 }}
+        scrollEventThrottle={16}
+      >
         <Animated.Image
           source={{ uri: listing?.xl_picture_url }}
-          style={styles.image}
+          style={[styles.image, imageAnimatedStyle]}
         />
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{listing?.name}</Text>
