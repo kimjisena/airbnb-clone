@@ -13,6 +13,10 @@ import { defaultStyles } from "@/constants/Styles";
 import { Listing } from "@/interfaces/listing";
 import { Ionicons } from "@expo/vector-icons";
 import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
+import {
+  BottomSheetFlatList,
+  BottomSheetFlatListMethods,
+} from "@gorhom/bottom-sheet";
 
 interface ListingsProps {
   listings: Listing[];
@@ -21,7 +25,7 @@ interface ListingsProps {
 }
 const Listings = ({ listings: items, category, refresh }: ListingsProps) => {
   const [loading, setLoading] = React.useState(false);
-  const listRef = React.useRef<FlatList>(null);
+  const listRef = React.useRef<BottomSheetFlatListMethods>(null);
 
   React.useEffect(() => {
     if (refresh) {
@@ -30,7 +34,6 @@ const Listings = ({ listings: items, category, refresh }: ListingsProps) => {
   }, [refresh]);
 
   React.useEffect(() => {
-    console.log("RELOAD LISTINGS FOR_", items.length);
     setLoading(true);
 
     setTimeout(() => {
@@ -80,10 +83,13 @@ const Listings = ({ listings: items, category, refresh }: ListingsProps) => {
 
   return (
     <View style={defaultStyles.container}>
-      <FlatList
+      <BottomSheetFlatList
         renderItem={renderRow}
         ref={listRef}
         data={loading ? [] : items}
+        ListHeaderComponent={() => (
+          <Text style={styles.info}>{items.length} homes</Text>
+        )}
       />
     </View>
   );
@@ -99,6 +105,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 300,
     borderRadius: 10,
+  },
+  info: {
+    textAlign: "center",
+    fontFamily: "mon-sb",
+    fontSize: 16,
+    marginTop: 4,
   },
 });
 

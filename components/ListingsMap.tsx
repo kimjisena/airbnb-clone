@@ -16,7 +16,7 @@ const INITIAL_REGION = {
   latitudeDelta: 9,
   longitudeDelta: 9,
 };
-const ListingsMap = ({ listings }: ListingsMapProps) => {
+const ListingsMap = React.memo(({ listings }: ListingsMapProps) => {
   const router = useRouter();
   const onMarkerSelected = (item: ListingGeo) => {
     router.push(`/listing/${item.properties.id}`);
@@ -81,7 +81,7 @@ const ListingsMap = ({ listings }: ListingsMapProps) => {
       </MapView>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
