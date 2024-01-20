@@ -5,9 +5,10 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  Share,
 } from "react-native";
 import React from "react";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import listingsData from "@/assets/data/airbnb-listings.json";
 import { Listing } from "@/interfaces/listing";
 import Animated, {
@@ -25,9 +26,46 @@ const IMG_HEIGHT = 300;
 const { width } = Dimensions.get("window");
 const Page = () => {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const navigation = useNavigation();
   const listing = (listingsData as Listing[]).find((item) => item.id === id);
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const scrollOffset = useScrollViewOffset(scrollRef);
+  const shareListing = async () => {
+    // use Share from react-native
+    try {
+      await Share.share({
+        title: listing?.name,
+        url: listing?.listing_url as string,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackground: () => (
+        <Animated.View style={[headerAnimatedStyle, styles.header]} />
+      ),
+      headerRight: () => (
+        <View style={styles.bar}>
+          <TouchableOpacity style={styles.roundButton} onPress={shareListing}>
+            <Ionicons name="share-outline" size={22} color="#000" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.roundButton}>
+            <Ionicons name="heart-outline" size={22} color="#000" />
+          </TouchableOpacity>
+        </View>
+      ),
+      headerLeft: () => (
+        <TouchableOpacity
+          style={styles.roundButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back-outline" size={22} color="#000" />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
   const imageAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -46,6 +84,12 @@ const Page = () => {
           ),
         },
       ],
+    };
+  });
+
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
     };
   });
   return (
@@ -187,6 +231,29 @@ const styles = StyleSheet.create({
   footerPrice: {
     fontSize: 18,
     fontFamily: "mon-sb",
+  },
+  bar: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 10,
+  },
+  roundButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    color: Colors.primary,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: Colors.grey,
+  },
+  header: {
+    backgroundColor: "#fff",
+    height: 100,
+    borderBottomColor: Colors.grey,
+    borderWidth: StyleSheet.hairlineWidth,
   },
 });
 export default Page;
