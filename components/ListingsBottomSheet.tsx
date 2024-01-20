@@ -17,11 +17,10 @@ const ListingsBottomSheet = ({
 }: ListingBottomSheetProps) => {
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const snapPoints = React.useMemo(() => ["10%", "100%"], []);
+  const [refresh, setRefresh] = React.useState<number>(0);
   const showMap = () => {
-    console.log(
-      "🚀 ~ file: ListingsBottomSheet.tsx:23 ~ showMap ~ showMap:",
-      showMap,
-    );
+    bottomSheetRef.current?.collapse();
+    setRefresh(refresh + 1);
   };
   return (
     <BottomSheet
@@ -32,9 +31,10 @@ const ListingsBottomSheet = ({
       handleIndicatorStyle={{
         backgroundColor: Colors.grey,
       }}
+      style={styles.sheetContainer}
     >
       <View style={{ flex: 1 }}>
-        <Listings listings={listings} category={category} />
+        <Listings listings={listings} category={category} refresh={refresh} />
         <View style={styles.absoluteBtn}>
           <TouchableOpacity onPress={showMap} style={styles.btn}>
             <Text style={{ fontFamily: "mon-sb", color: "#fff" }}>Map</Text>
@@ -47,6 +47,18 @@ const ListingsBottomSheet = ({
 };
 
 const styles = StyleSheet.create({
+  sheetContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    shadowOffset: {
+      width: 1,
+      height: 1,
+    },
+  },
   absoluteBtn: {
     position: "absolute",
     bottom: 30,

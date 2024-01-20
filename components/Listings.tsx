@@ -17,10 +17,18 @@ import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 interface ListingsProps {
   listings: Listing[];
   category: string;
+  refresh: number;
 }
-const Listings = ({ listings: items, category }: ListingsProps) => {
+const Listings = ({ listings: items, category, refresh }: ListingsProps) => {
   const [loading, setLoading] = React.useState(false);
   const listRef = React.useRef<FlatList>(null);
+
+  React.useEffect(() => {
+    if (refresh) {
+      listRef.current?.scrollToOffset({ animated: true, offset: 0 });
+    }
+  }, [refresh]);
+
   React.useEffect(() => {
     console.log("RELOAD LISTINGS FOR_", items.length);
     setLoading(true);
