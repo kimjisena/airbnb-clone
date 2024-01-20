@@ -15,6 +15,7 @@
   "dependencies": {
     "@clerk/clerk-expo": "^0.20.1",
     "@expo/vector-icons": "^13.0.0",
+    "@gorhom/bottom-sheet": "^4.6.0",
     "@react-navigation/native": "^6.0.2",
     "expo": "~49.0.15",
     "expo-font": "~11.4.0",

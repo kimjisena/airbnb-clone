@@ -11,8 +11,8 @@ interface ListingsMapProps {
 }
 
 const INITIAL_REGION = {
-  latitude: 37.78825,
-  longitude: -122.4324,
+  latitude: 51.478583,
+  longitude: 10,
   latitudeDelta: 9,
   longitudeDelta: 9,
 };
