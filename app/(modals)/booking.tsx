@@ -24,13 +24,35 @@ import DatePicker from "react-native-modern-datepicker";
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
+
+const guestsGroups = [
+  {
+    name: "Adults",
+    text: "Ages 13 or above",
+    count: 0,
+  },
+  {
+    name: "Children",
+    text: "Ages 2-12",
+    count: 0,
+  },
+  {
+    name: "Infants",
+    text: "Under 2",
+    count: 0,
+  },
+  {
+    name: "Pets",
+    text: "Pets allowed",
+    count: 0,
+  },
+];
 const Page = () => {
   const router = useRouter();
-  const [openCard, setOpenCard] = React.useState(2);
+  const [openCard, setOpenCard] = React.useState(0);
   const [selectedPlace, setSelectedPlace] = React.useState(0);
   const today = new Date().toISOString().substring(0, 10);
-  console.log("🚀 ~ file: booking.tsx:32 ~ Page ~ today:", today);
-
+  const [groups, setGroups] = React.useState(guestsGroups);
   const onClearAll = () => {
     setSelectedPlace(0);
     setOpenCard(0);
@@ -159,7 +181,78 @@ const Page = () => {
             <Animated.Text entering={FadeIn} style={styles.cardHeader}>
               Who's coming?
             </Animated.Text>
-            <Animated.View style={styles.cardBody}></Animated.View>
+            <Animated.View style={styles.cardBody}>
+              {groups.map((group, idx) => (
+                <View
+                  key={idx}
+                  style={[
+                    styles.guestItem,
+                    idx + 1 < guestsGroups.length ? styles.itemBorder : null,
+                  ]}
+                >
+                  <View>
+                    <Text style={{ fontFamily: "mon-sb", fontSize: 14 }}>
+                      {group.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "mon",
+                        fontSize: 14,
+                        color: Colors.grey,
+                      }}
+                    >
+                      {group.text}
+                    </Text>
+                  </View>
+
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 10,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={() => {
+                        const newGroups = [...groups];
+                        if (newGroups[idx].count > 0) newGroups[idx].count -= 1;
+                        setGroups(newGroups);
+                      }}
+                    >
+                      <Ionicons
+                        name="remove-circle-outline"
+                        size={26}
+                        color={groups[idx].count > 0 ? Colors.grey : "#cdcdcd"}
+                      />
+                    </TouchableOpacity>
+                    <Text
+                      style={{
+                        fontFamily: "mon",
+                        fontSize: 16,
+                        minWidth: 18,
+                        textAlign: "center",
+                      }}
+                    >
+                      {group.count}
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => {
+                        const newGroups = [...groups];
+                        newGroups[idx].count += 1;
+                        setGroups(newGroups);
+                      }}
+                    >
+                      <Ionicons
+                        name="add-circle-outline"
+                        size={26}
+                        color={Colors.grey}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))}
+            </Animated.View>
           </>
         )}
       </View>
@@ -280,6 +373,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: Colors.grey,
+  },
+  guestItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 16,
+  },
+  itemBorder: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Colors.grey,
   },
 });
 
