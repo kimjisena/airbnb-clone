@@ -56,6 +56,7 @@ const Page = () => {
   const onClearAll = () => {
     setSelectedPlace(0);
     setOpenCard(0);
+    setGroups(guestsGroups);
   };
   return (
     <BlurView intensity={70} style={styles.container} tint="light">
