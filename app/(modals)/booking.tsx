@@ -26,7 +26,7 @@ const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
 const Page = () => {
   const router = useRouter();
-  const [openCard, setOpenCard] = React.useState(1);
+  const [openCard, setOpenCard] = React.useState(2);
   const [selectedPlace, setSelectedPlace] = React.useState(0);
   const today = new Date().toISOString().substring(0, 10);
   console.log("🚀 ~ file: booking.tsx:32 ~ Page ~ today:", today);
@@ -155,11 +155,12 @@ const Page = () => {
           </AnimatedTouchableOpacity>
         )}
         {openCard === 2 && (
-          <Animated.View>
+          <>
             <Animated.Text entering={FadeIn} style={styles.cardHeader}>
               Who's coming?
             </Animated.Text>
-          </Animated.View>
+            <Animated.View style={styles.cardBody}></Animated.View>
+          </>
         )}
       </View>
       {/** footer */}
