@@ -19,13 +19,17 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import { places } from "@/assets/data/places";
+// @ts-ignore
+import DatePicker from "react-native-modern-datepicker";
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
 const Page = () => {
   const router = useRouter();
-  const [openCard, setOpenCard] = React.useState(0);
+  const [openCard, setOpenCard] = React.useState(1);
   const [selectedPlace, setSelectedPlace] = React.useState(0);
+  const today = new Date().toISOString().substring(0, 10);
+  console.log("🚀 ~ file: booking.tsx:32 ~ Page ~ today:", today);
 
   const onClearAll = () => {
     setSelectedPlace(0);
@@ -116,11 +120,24 @@ const Page = () => {
           </AnimatedTouchableOpacity>
         )}
         {openCard === 1 && (
-          <Animated.View>
+          <>
             <Animated.Text entering={FadeIn} style={styles.cardHeader}>
               When's your trip?
             </Animated.Text>
-          </Animated.View>
+            <Animated.View style={styles.cardBody}>
+              <DatePicker
+                current={today}
+                selected={today}
+                mode={"calendar"}
+                options={{
+                  defaultFont: "mon",
+                  headerFont: "mon-sb",
+                  borderColor: "transparent",
+                  mainColor: Colors.primary,
+                }}
+              />
+            </Animated.View>
+          </>
         )}
       </View>
 
