@@ -65,21 +65,36 @@ const Page = () => {
                 />
               </View>
             </Animated.View>
-
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                gap: 25,
+                paddingLeft: 20,
+                marginBottom: 30,
+              }}
+            >
               {places.map((place, idx) => (
                 <TouchableOpacity
                   key={idx}
                   onPress={() => setSelectedPlace(idx)}
                 >
                   <Image
-                    source={{ uri: place.img }}
+                    source={place.img}
                     style={
                       selectedPlace === idx
                         ? styles.placeSelected
                         : styles.place
                     }
                   />
+                  <Text
+                    style={{
+                      fontFamily: selectedPlace === idx ? "mon-sb" : "mon",
+                      paddingTop: 6,
+                    }}
+                  >
+                    {place.title}
+                  </Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
@@ -216,7 +231,6 @@ const styles = StyleSheet.create({
   },
   cardBody: {
     paddingHorizontal: 20,
-    paddingBottom: 20,
   },
   searchSection: {
     height: 50,
@@ -227,7 +241,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignContent: "center",
     alignItems: "center",
-    marginBottom: 16,
+    marginBottom: 4,
   },
   searchInputField: {
     flex: 1,
@@ -237,8 +251,18 @@ const styles = StyleSheet.create({
   searchIcon: {
     padding: 10,
   },
-  place: {},
-  placeSelected: {},
+  place: {
+    width: 120,
+    height: 120,
+    borderRadius: 10,
+  },
+  placeSelected: {
+    width: 120,
+    height: 120,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: Colors.grey,
+  },
 });
 
 export default Page;
