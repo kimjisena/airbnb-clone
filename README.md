@@ -44,3 +44,7 @@ With NodeJS and NPM installed, do the following:
 - Scan the QR code with Camera app (iOS) or Expo Go (Android) to preview the app on mobile devices
 
 - Create a `.env` file and add your Clerk publishable key. See `.env.example`
+
+## Android App Bundle
+
+Click this [link](https://expo.dev/artifacts/eas/eCtHdKxueBUvZe9ATkFwdh.aab) to download the Airbnb clone app for android (AAB)
