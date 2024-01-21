@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  ScrollView,
+  Image,
+} from "react-native";
 import React from "react";
 import { BlurView } from "expo-blur";
 import Animated, {
@@ -11,6 +18,7 @@ import { useRouter } from "expo-router";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
+import { places } from "@/assets/data/places";
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -57,6 +65,24 @@ const Page = () => {
                 />
               </View>
             </Animated.View>
+
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {places.map((place, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  onPress={() => setSelectedPlace(idx)}
+                >
+                  <Image
+                    source={{ uri: place.img }}
+                    style={
+                      selectedPlace === idx
+                        ? styles.placeSelected
+                        : styles.place
+                    }
+                  />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
           </>
         )}
       </View>
@@ -171,12 +197,12 @@ const styles = StyleSheet.create({
   previewText: {
     fontFamily: "mon-sb",
     fontSize: 14,
-    colors: Colors.grey,
+    color: Colors.grey,
   },
   previewDate: {
     fontFamily: "mon-sb",
     fontSize: 14,
-    colors: Colors.dark,
+    color: Colors.dark,
   },
   cardPreview: {
     flexDirection: "row",
@@ -211,6 +237,8 @@ const styles = StyleSheet.create({
   searchIcon: {
     padding: 10,
   },
+  place: {},
+  placeSelected: {},
 });
 
 export default Page;
